@@ -20,7 +20,7 @@ report = st.sidebar.radio(
         "Weekly Sales",
         "Season to Date",
         "Stock on Hand",
-        "Sell Through"
+        "Sell Through by Brand"
     ]
 )
 
