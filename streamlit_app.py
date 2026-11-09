@@ -82,3 +82,77 @@ elif report == "Sell Through":
 
 st.divider()
 st.caption("Al Othman Fashion | BI Reporting System")
+
+# Customer Traffic Dashboard - Development Preview
+
+import pandas as pd
+
+st.divider()
+st.header("ALKW Customer Traffic")
+st.caption("Development preview - sample data only")
+
+start_date = st.date_input(
+    "From Date",
+    value=pd.Timestamp("2026-11-01").date()
+)
+
+end_date = st.date_input(
+    "To Date",
+    value=pd.Timestamp("2026-11-07").date()
+)
+
+# Illustrative records, not actual customer data
+data = pd.DataFrame([
+    {
+        "CustomerAccount": "DEMO-001",
+        "CustomerCategory": "Existing",
+        "NetBuyKWD": 120.000
+    },
+    {
+        "CustomerAccount": "DEMO-002",
+        "CustomerCategory": "Returning",
+        "NetBuyKWD": 550.000
+    },
+    {
+        "CustomerAccount": "DEMO-003",
+        "CustomerCategory": "New",
+        "NetBuyKWD": 315.000
+    }
+])
+
+if start_date > end_date:
+    st.error("From Date must be before To Date.")
+    st.stop()
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Customers", len(data))
+col2.metric(
+    "Net Buy (KWD)",
+    f"{data['NetBuyKWD'].sum():,.3f}"
+)
+col3.metric(
+    "Existing Customers",
+    (data["CustomerCategory"] == "Existing").sum()
+)
+
+st.subheader("Customer Classification")
+
+summary = (
+    data.groupby("CustomerCategory")
+    .size()
+    .rename("Customers")
+)
+
+st.bar_chart(summary)
+
+st.subheader("Customer Details")
+st.dataframe(data, use_container_width=True)
+
+st.download_button(
+    "Download CSV",
+    data=data.to_csv(index=False),
+    file_name="customer_traffic_demo.csv",
+    mime="text/csv"
+)
+
